@@ -23,7 +23,7 @@ export default function HomePage() {
         <ServicesSection />
       </section>
       {/* Contact - (View on Google Maps button and a form. Left side are the contacts and right side are the google map with marker) */}
-      <section id="contact" className="border-y py-24 scroll-mt-24">
+      <section id="contact" className="border-y py-24 scroll-mt-20">
         <ContactSection />
       </section>
     </>

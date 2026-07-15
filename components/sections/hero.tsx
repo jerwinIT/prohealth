@@ -44,7 +44,7 @@ export default function HeroSection() {
               className="h-12 rounded-md px-7 text-base"
               render={
                 <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/prohealthdiagnosticlaboratory"
                   target="_blank"
                   rel="noopener noreferrer"
                 />

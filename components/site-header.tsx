@@ -1,21 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { navLinks, site } from "@/lib/site";
+import { navLinks, site, formatPhone, telHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
-  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [activeHash, setActiveHash] = useState("");
+
+  // Scroll-spy: this is a one-page site, so the route never changes —
+  // usePathname() always returns "/" and can't tell sections apart.
+  // Instead, watch which section is actually in view and highlight that link.
+  useEffect(() => {
+    const sectionIds = navLinks
+      .filter((link) => link.href.startsWith("#"))
+      .map((link) => link.href.slice(1));
+
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible.length > 0) {
+          setActiveHash(`#${visible[0].target.id}`);
+        } else if (window.scrollY < 100) {
+          setActiveHash("");
+        }
+      },
+      // Counts a section as "active" once it crosses the middle band of the viewport
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  const isActive = (href: string) =>
+    href === "/" ? activeHash === "" : activeHash === href;
 
   return (
     <header className="sticky top-0 z-[100] w-full border-b border-border bg-background/90 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
           className="flex shrink-0 items-center gap-2"
@@ -43,7 +79,7 @@ export function SiteHeader() {
 
         <nav className="hidden items-center gap-0.5 lg:flex">
           {navLinks.map((link) => {
-            const active = pathname === link.href;
+            const active = isActive(link.href);
             return (
               <Link
                 key={link.href}
@@ -61,19 +97,15 @@ export function SiteHeader() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <Button
-            className="group flex items-center gap-2"
-            render={<a href={`tel:${site.phones[0]}`} />}
+            className="flex items-center gap-2"
+            render={<a href={telHref(site.phones[0])} />}
             nativeButton={false}
           >
             <Phone className="size-4 shrink-0" />
-            <span className="grid grid-cols-[1fr] transition-[grid-template-columns] duration-300 ease-in-out group-hover:grid-cols-[0fr]">
-              <span className="overflow-hidden whitespace-nowrap">
-                Call Now
-              </span>
-            </span>
-            <span className="grid grid-cols-[0fr] transition-[grid-template-columns] duration-300 ease-in-out group-hover:grid-cols-[1fr]">
-              <span className="overflow-hidden whitespace-nowrap tabular-nums">
-                {site.phones[0]}
+            <span className="whitespace-nowrap">
+              Call:{" "}
+              <span className="tabular-nums">
+                {formatPhone(site.phones[0])}
               </span>
             </span>
           </Button>
@@ -92,9 +124,9 @@ export function SiteHeader() {
 
       {open && (
         <div className="border-t border-border bg-background lg:hidden">
-          <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-4 sm:px-6 lg:px-8">
+          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 sm:px-6 lg:px-8">
             {navLinks.map((link) => {
-              const active = pathname === link.href;
+              const active = isActive(link.href);
               return (
                 <Link
                   key={link.href}
@@ -113,13 +145,15 @@ export function SiteHeader() {
             })}
             <Button
               className="mt-2 w-full"
-              render={<a href={`tel:${site.phones[0]}`} />}
+              render={<a href={telHref(site.phones[0])} />}
               nativeButton={false}
             >
               <Phone className="size-4 shrink-0" />
               <span className="truncate">
-                Call Now —{" "}
-                <span className="tabular-nums">{site.phones[0]}</span>
+                Call:{" "}
+                <span className="tabular-nums">
+                  {formatPhone(site.phones[0])}
+                </span>
               </span>
             </Button>
           </nav>

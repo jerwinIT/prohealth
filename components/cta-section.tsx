@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 export function CtaSection() {
   return (
     <section className="bg-primary text-primary-foreground">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-16 text-center sm:px-6 md:py-20">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-6 px-4 py-16 text-center sm:px-6 md:py-20">
         <h2 className="max-w-2xl text-3xl font-bold tracking-tight text-balance sm:text-4xl">
           Ready to prioritize your health?
         </h2>

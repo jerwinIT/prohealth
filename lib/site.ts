@@ -4,11 +4,11 @@ export const site = {
   name: "ProHealth",
   fullName: "ProHealth Diagnostic Laboratory",
   tagline: "Accurate. Caring. Reliable.",
-  address: "338 Rizal St., Poblacion, Looc, Romblon",
+  address: "338 Rizal St, Looc, Romblon",
+  // Google Plus Code — more precise than the street address alone for map geocoding.
+  mapQuery: "7X6V+JG Looc, Romblon",
   phones: ["09565741312", "09511142586"],
   facebook: "https://www.facebook.com/prohealthdiagnosticlaboratory",
-  // Approximate coordinates for Looc, Romblon — adjust the exact marker as needed.
-  coordinates: { lat: 12.2646, lng: 121.9945 },
   hours: [
     { day: "Monday – Friday", time: "7:00 AM – 6:00 PM" },
     { day: "Saturday", time: "7:00 AM – 4:00 PM" },
@@ -18,10 +18,24 @@ export const site = {
 
 export const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/services", label: "Services" },
-  { href: "/contact", label: "Contact" },
+  { href: "#about", label: "About" },
+  { href: "#services", label: "Services" },
+  { href: "#contact", label: "Contact" },
 ];
+
+/** Formats a local PH mobile number like "09565741312" as "(+63) 956-574-1312" */
+export function formatPhone(raw: string) {
+  const digits = raw.replace(/\D/g, "");
+  const local = digits.startsWith("0") ? digits.slice(1) : digits;
+  return `(+63) ${local.slice(0, 3)}-${local.slice(3, 6)}-${local.slice(6)}`;
+}
+
+/** Builds a tel: href from a local PH mobile number like "09565741312" */
+export function telHref(raw: string) {
+  const digits = raw.replace(/\D/g, "");
+  const local = digits.startsWith("0") ? digits.slice(1) : digits;
+  return `tel:+63${local}`;
+}
 
 export type Service = {
   /** Filename (without extension) of the landscape jpg in /public/images/services */

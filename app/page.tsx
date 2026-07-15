@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <>
       {/* Hero - Image background */}
-      <section className="relative overflow-hidden bg-secondary/40">
+      <section className="relative overflow-hidden bg-secondary/40 ">
         <HeroSection />
       </section>
 

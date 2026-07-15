@@ -26,6 +26,16 @@ export function SiteHeader() {
 
     if (sections.length === 0) return;
 
+    // Near the very top of the page, always force "Home" — don't rely on the
+    // IntersectionObserver callback alone, since it may fire mid-scroll
+    // (before scrollY actually settles near 0) and then never fire again,
+    // leaving the last section stuck as "active".
+    const handleScroll = () => {
+      if (window.scrollY < 80) {
+        setActiveHash("");
+      }
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
@@ -34,8 +44,6 @@ export function SiteHeader() {
 
         if (visible.length > 0) {
           setActiveHash(`#${visible[0].target.id}`);
-        } else if (window.scrollY < 100) {
-          setActiveHash("");
         }
       },
       // Counts a section as "active" once it crosses the middle band of the viewport
@@ -43,7 +51,13 @@ export function SiteHeader() {
     );
 
     sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const isActive = (href: string) =>

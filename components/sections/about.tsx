@@ -88,7 +88,7 @@ export default function AboutSection() {
           {/* Primary circle image */}
           <div className="absolute left-0 top-0 size-[70%] overflow-hidden rounded-full ring-4 ring-background">
             <Image
-              src="/images/about-lab-1.jpg"
+              src="/images/lab-exam.jpg"
               alt="ProHealth Diagnostic Laboratory technician preparing a sample"
               fill
               sizes="(min-width: 1024px) 320px, 60vw"
@@ -99,7 +99,7 @@ export default function AboutSection() {
           {/* Secondary, offset circle image */}
           <div className="absolute bottom-0 right-0 size-[52%] overflow-hidden rounded-full ring-4 ring-background">
             <Image
-              src="/images/about-lab-2.jpg"
+              src="/images/neuro-exam.jpg"
               alt="ProHealth Diagnostic Laboratory equipment used for examinations"
               fill
               sizes="(min-width: 1024px) 240px, 45vw"
